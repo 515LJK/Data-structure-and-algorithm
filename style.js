@@ -358,4 +358,163 @@ function identicalSex(list){
 
 }
 
-identicalSex(list);
+
+//栈 Stack
+function Stack(){
+    this.dataStore = [];
+    this.top = 0;
+    this.push = push;
+    this.pop = pop;
+    this.peek = peek;
+    this.length = length;
+    this.clear = clear;
+}
+
+function push(element){
+    this.dataStore.push(element);
+}
+
+function pop(){
+    return this.dataStore.pop();
+}
+
+function peek(){
+    return this.dataStore[this.dataStore.length -1];
+}
+
+function length(){
+    return this.dataStore.length;
+}
+
+function clear(){
+    this.top = 0;
+}
+
+//栈可以用来判断一个算术表达式中的括号是否匹配。编写一个函数，该函数接收一个算术表达式作为参数，返回括号缺失的位置。下面是一个括号不匹配的算术表达式的例子：2.3+23/12 + (3.14159*0.24;
+
+/*function judge(express){
+	var s = new Stack(),
+		index;
+
+	for( var i=0;i<express.length;i++ ){
+
+		if( ['[','{','('].indexOf(express[i]) !== -1 ){
+			s.push(express[i]);
+		}else if([']','}',')'].indexOf(express[i]) !== -1){
+			s.push(express[i]);
+		}
+	}
+
+	var word = '';
+
+	if( s.length() == 2 ){
+		return -1;
+	}else{
+		word = s.pop();
+		if( ['[','{','('].indexOf(word) !== -1 ){
+			return express.length+1;
+		}else if([']','}',')'].indexOf(word) !== -1){
+			return 0;
+		}
+	}
+
+}
+
+judge('2.3+23/12+3.14159*0.24)');*/
+
+//一个算术表达式的后缀表达式形式如下：op1 op2 operator:使用两个栈，一个用来存储操作数，另外一个用来存储操作符，设计并实现一个JavaScript函数，该函数可以将中缀表达式转换为后缀表达式，然后利用栈对该表达式求值
+
+function transfer(express){
+	var s1 = new Stack(),
+		s2 = new Stack(),
+		s3 = new Stack(),
+		arr,
+		value,
+		top,
+		secondTop;
+
+	for(var i=0;i<express.length;i++){
+		if(Number(express[i])){
+			s1.push(express[i])
+		}else if( ['+','-','×','/','('].indexOf(express[i]) !== -1 ){
+			var peek2 = s2.peek();
+			switch(peek2){
+				case '+':
+					if(express[i] == '+' || express == '-'){
+						s1.push(s2.pop());
+					}
+					break;
+				case '-':
+					if(express[i] == '+' || express == '-'){
+						s1.push(s2.pop());
+					}
+					break;
+				case '×':
+					if(express[i] == '×' || express == '/'){
+						s1.push(s2.pop());
+					}
+					break;
+				default:
+					if(express[i] == '×' || express == '/'){
+						s1.push(s2.pop());
+					}
+					break;
+			};
+			s2.push(express[i]);
+
+		}else if( ')' === express[i] ){
+			var onOff = true;
+			while(s2.length()>0 && onOff){
+				var pop2 = s2.peek();
+				if(pop2 != '('){
+					s1.push(s2.pop());
+				}else{
+					s2.pop();
+					onOff = false;
+				}
+			}
+		}
+
+	}
+
+	while(s2.length()>0){
+		s1.push(s2.pop());
+	}
+
+
+	arr = s1.dataStore;
+	for(var i=0;i<arr.length;i++){
+		if(Number(arr[i])){
+			s3.push(Number(arr[i]));			
+		}else{
+			switch(arr[i]){
+				case '+':
+					top = s3.pop();
+					secondTop = s3.pop();
+					s3.push(secondTop + top);
+					break;
+				case '-':
+					top = s3.pop();
+					secondTop = s3.pop();
+					s3.push(secondTop - top);
+					break;
+				case '×':
+					top = s3.pop();
+					secondTop = s3.pop();
+					s3.push(secondTop * top);
+					break;
+				case '/':
+					top = s3.pop();
+					secondTop = s3.pop();
+					s3.push(secondTop / top);
+					break;
+			}
+		}
+
+	}
+
+	return s3.pop();
+}
+//s1 123
+//s2 +((+
+console.log(transfer("1+((2+3)×4)-5"));
