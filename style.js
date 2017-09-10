@@ -438,28 +438,29 @@ function transfer(express){
 			s1.push(express[i])
 		}else if( ['+','-','×','/','('].indexOf(express[i]) !== -1 ){
 			var peek2 = s2.peek();
-			switch(peek2){
+			switch(express[i]){
 				case '+':
-					if(express[i] == '+' || express == '-'){
+					if( ['+','-','/','×'].indexOf(peek2) !== -1 ){
 						s1.push(s2.pop());
 					}
 					break;
 				case '-':
-					if(express[i] == '+' || express == '-'){
+					if( ['+','-','/','×'].indexOf(peek2) !== -1 ){
 						s1.push(s2.pop());
 					}
 					break;
 				case '×':
-					if(express[i] == '×' || express == '/'){
+					if( ['/','×'].indexOf(peek2) !== -1 ){
 						s1.push(s2.pop());
 					}
 					break;
-				default:
-					if(express[i] == '×' || express == '/'){
+				case '/':
+					if( ['/','×'].indexOf(peek2) !== -1 ){
 						s1.push(s2.pop());
 					}
 					break;
 			};
+
 			s2.push(express[i]);
 
 		}else if( ')' === express[i] ){
@@ -480,7 +481,6 @@ function transfer(express){
 	while(s2.length()>0){
 		s1.push(s2.pop());
 	}
-
 
 	arr = s1.dataStore;
 	for(var i=0;i<arr.length;i++){
@@ -515,6 +515,7 @@ function transfer(express){
 
 	return s3.pop();
 }
-//s1 123
-//s2 +((+
+//(3+4)×5-6
+//s1 34+5×6-
+//s2 
 console.log(transfer("1+((2+3)×4)-5"));
