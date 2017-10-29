@@ -392,7 +392,7 @@ function clear(){
 
 //栈可以用来判断一个算术表达式中的括号是否匹配。编写一个函数，该函数接收一个算术表达式作为参数，返回括号缺失的位置。下面是一个括号不匹配的算术表达式的例子：2.3+23/12 + (3.14159*0.24;
 
-/*function judge(express){
+function judge(express){
 	var s = new Stack(),
 		index;
 
@@ -420,7 +420,7 @@ function clear(){
 
 }
 
-judge('2.3+23/12+3.14159*0.24)');*/
+judge('2.3+23/12+3.14159*0.24)');
 
 //一个算术表达式的后缀表达式形式如下：op1 op2 operator:使用两个栈，一个用来存储操作数，另外一个用来存储操作符，设计并实现一个JavaScript函数，该函数可以将中缀表达式转换为后缀表达式，然后利用栈对该表达式求值
 
@@ -515,7 +515,189 @@ function transfer(express){
 
 	return s3.pop();
 }
-//(3+4)×5-6
-//s1 34+5×6-
-//s2 
+
+
 console.log(transfer("1+((2+3)×4)-5"));
+
+
+//二叉树
+function Node(data,left,right){
+    this.data = data;
+    this.left = left;
+    this.right = right;
+    this.show = show;
+}
+
+function show(){
+    return this.data;
+}
+
+//Node对象既保存数据，也保持和其他节点的链接
+
+function BST(){
+    this.root = null;
+    this.insert = insert;
+    this.inOrder = inOrder;
+}
+
+function insert(data){
+    var n = new Node(data,null,null);
+    if(this.root == null){
+        this.root = n;
+    }else{
+        var current = this.root;
+        var parent;
+        while(true){
+            parent = current;
+            if(data<current.data){
+                current = current.left;
+                if(current == null){
+                    parent.left = n;
+                    break;
+                }
+            }else{
+                  current = current.right;
+                  if(current == null){
+                      parent.right = n;
+                      break;
+                  }
+            }
+        }
+    }
+}
+
+//有三种遍历BST的方式：中序、先序和后序。中序遍历按照节点上的键值，以升序访问BST上的所有节点。先序遍历先访问根节点，然后以同样方式访问左字树和右字树。后序遍历先访问叶子节点，从左子树到右子树，再到根节点
+
+//中序遍历
+function inOrder(node){
+    if(!(node == null)){
+        inOrder(node.left);
+        console.log(node.show()+"");
+        inOrder(node.right);
+    }
+}
+
+//先序遍历
+function preOrder(node){
+    if(!(node == null)){
+        console.log(node.show()+"");
+        preOrder(node.left);
+        preOrder(node.right)
+    }
+}
+
+//后序遍历
+function postOrder(node){
+    if(!(node==null)){
+        postOrder(node.left);
+        postOrder(node.right);
+        console.log(node.show()+"");
+    }
+}
+
+//二叉查找
+
+//找最小值
+
+function getMin(){
+     var current = this.root;
+     while(!(current.left === null)){
+          current = current.left;
+     }
+     return current.data;
+}
+
+//找给定值
+
+function find(data){
+     var current = this.root;
+     while(current!=null){
+          if(current.data == data){
+               return current;
+          }else if(data<current.data){
+               current = curent.left;
+          }else{
+               current = current.right;
+          }
+     }
+
+     return null;
+     
+}
+
+
+
+//四种基本算法
+//冒泡排序：
+function bubbleSort(arr){
+    var temp;
+    for(var i=0;i<arr.length;i++){
+        for(var j=0;j<arr.length-i-1;j++){
+            if(arr[j]>arr[j+1]){
+                temp = arr[j+1];
+                arr[j+1] = arr[j];
+                arr[j] = temp;
+            }
+        }
+    }
+
+    return arr;
+}
+
+//选择排序
+function selectSort(arr){
+    var len = arr.length;
+    var index,temp;
+    for(var i = 0; i < len-1 ;i++){
+        index = i;
+        for(var j = i + 1 ; j<len; j++){
+            if(arr[j] < arr[index]){//寻找最小的数
+                index = j;//保存最小数的索引
+            }
+        }
+        temp = arr[i];
+        arr[i] = arr[index];
+        arr[index] = temp;
+    }
+    return arr;
+}
+
+
+//插入排序
+
+function insertSort(arr) {
+        for (var i = 1; i < arr.length; i++) {
+            var temp = arr[i];
+            var j = i - 1;
+             while (j >= 0 && arr[j] > temp) {
+                 arr[j + 1] = arr[j];
+                  j--;             }
+            arr[j + 1] = temp;
+        }
+       	return arr;
+  }
+var arr = [1, 45, 37, 5, 48, 15, 37, 26, 29, 2, 46, 4, 17, 50, 52];
+
+//快速排序
+
+function qSort(arr){
+
+    if(arr.length == 0){
+        return [];
+    }
+
+    var left = [];
+    var right = [];
+    var min = arr[0];
+
+    for(var i=1;i<arr.length;i++){
+        if(arr[i]<min){
+            left.push(arr[i]);
+        }else{
+            right.push(arr[i]);
+        }
+    }
+
+    return qSort(left).concat(min,qSort(right));
+
+}
